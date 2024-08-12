@@ -7,7 +7,7 @@ from CusKey import *
 # some variable like telegram channel id and TeleBot as bot
 types = types
 ChannelId = '-1002160415180'
-bot = telebot.TeleBot('')
+bot = telebot.TeleBot('7366730929:AAE071bwbTaEXsSOcKBi35bkETlhxzpjKQY')
 
 
 # ================================================================================================
@@ -38,8 +38,8 @@ def chat_id(message):
 # commands functions
 
 def start(message):
-    if not is_join(message, bot):
-        pass
+    if is_join(message, bot):
+        bot.send_message(message.chat.id, f"سلام {message.chat.first_name} \n به ربات visa ping خوش اومدی \n\n اینجا میتونی فقط با چند تا کلیک ی فیلترشکن سریع داشته باشی ! \n.")
     else:
         in_not_join(message, types, bot)
 

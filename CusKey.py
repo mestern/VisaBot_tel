@@ -41,12 +41,14 @@ def buy_menu(message, bot, types):
 # inline button
 def in_not_join(message, types, bot):
     markup = types.InlineKeyboardMarkup()
-    markup.add(types.InlineKeyboardButton("join", callback_data="joined"))
+    join = types.InlineKeyboardButton("join", callback_data="join", url="https://t.me/Visa_Ping_vpn")
+    check = types.InlineKeyboardButton("check", callback_data="check")
+    markup.add(join, check)
     bot.send_message(chat_id=message.chat.id, text="اول جوین کانال شو !", reply_markup=markup)
 
 
+# ============================================================================================
 
-
-
+# check if user joined button
 
 
