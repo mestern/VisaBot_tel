@@ -6,8 +6,8 @@ from CusKey import *
 
 # some variable like telegram channel id and TeleBot as bot
 types = types
-ChannelId = '-1002160415180'
-bot = telebot.TeleBot('7366730929:AAE071bwbTaEXsSOcKBi35bkETlhxzpjKQY')
+ChannelId = ''
+bot = telebot.TeleBot()
 
 
 # ================================================================================================
