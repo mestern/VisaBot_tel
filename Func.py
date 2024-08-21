@@ -66,6 +66,7 @@ def api_create(message, username, password, day, admin_pass, admin_username):
         "supporter": "supporter",
         "description": "description",
         "days": "31",
+
         "android_id2": "android_id2",
         "is_pc": "1",
         "username1": "username1",
