@@ -10,9 +10,7 @@ import Func
 # Commands handles /start, /help, /status and ...
 @bot.message_handler(commands=['start'])
 def start_handler(message):
-
     start(message, message.chat.id)
-
 
 
 # ===============================================================================================
@@ -22,25 +20,27 @@ def start_handler(message):
 # handle reply keyboard markup
 @bot.message_handler()
 def rep_key_hand(message):
-    match message.text:
-        case "💳|خرید":
-            bot.send_message(message.chat.id, "یکی رو انتخاب کن:",
-                             reply_to_message_id=message.id,
-                             reply_markup=inl_acc_time(types))
-        case "⚖|قوانین":
-            bot.send_message(message.chat.id, "توجه، استفاده از سرویس کاهش پینگ ویزا (Visa Ping)"
-                                              " برای انجام مقاصد مجرمانه به هر نحوی جرم بوده و درصورت "
-                                              "مشاهده حساب کاربری شما مسدود خواهد شد.",
-                             reply_to_message_id=message.id)
-        case "👨‍💻|پشتیبانی":
-            bot.export_chat_invite_link(message.chat.id, "@ping_support1")
-        case "💸|استعلام قیمت":
-            bot.reply_to(message=message, text="✅لیست قیمت\n🗓 یک‌ ماهه:"
-                                               f"\n🔰تک کاربره ۱۱۰ هزارتومان"
-                                               f"\n🔰دو کاربره ۱۶۰ هزارتومان"
-                                               f"\n🗓 سه ماهه:\n🔰تک کاربره ۲۴۰ هزارتومان"
-                                               f"\n🔰دو کاربره ۳۸۰ هزارتومان\n. ")
-
+    if is_join(message.chat.id, bot):
+        match message.text:
+            case "💳|خرید":
+                bot.send_message(message.chat.id, "یکی رو انتخاب کن:",
+                                 reply_to_message_id=message.id,
+                                 reply_markup=inl_acc_time(types))
+            case "⚖|قوانین":
+                bot.send_message(message.chat.id, "توجه، استفاده از سرویس کاهش پینگ ویزا (Visa Ping)"
+                                                  " برای انجام مقاصد مجرمانه به هر نحوی جرم بوده و درصورت "
+                                                  "مشاهده حساب کاربری شما مسدود خواهد شد.",
+                                 reply_to_message_id=message.id)
+            case "👨‍💻|پشتیبانی":
+                bot.export_chat_invite_link(message.chat.id, "@ping_support1")
+            case "💸|استعلام قیمت":
+                bot.reply_to(message=message, text="✅لیست قیمت\n🗓 یک‌ ماهه:"
+                                                   f"\n🔰تک کاربره ۱۱۰ هزارتومان"
+                                                   f"\n🔰دو کاربره ۱۶۰ هزارتومان"
+                                                   f"\n🗓 سه ماهه:\n🔰تک کاربره ۲۴۰ هزارتومان"
+                                                   f"\n🔰دو کاربره ۳۸۰ هزارتومان\n. ")
+    else:
+        inl_not_join(message.chat.id, types, bot)
 
 # ===============================================================================================
 # inline button handler

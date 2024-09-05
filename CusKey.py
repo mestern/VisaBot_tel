@@ -1,3 +1,6 @@
+from Func import *
+
+
 # ============================================================================================
 # ********************************************************************************************
 # custom keyboard button
@@ -13,6 +16,13 @@ def main_menu(types):
     support = types.KeyboardButton(text="👨‍💻|پشتیبانی")
     home = types.KeyboardButton(text="🏠|خانه")
     markup.add(price, buy, rules, support, home)
+    return markup
+
+
+def inviter_code(types):
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    invite = types.KeyboardButton(text="invite code")
+    markup.add(invite)
     return markup
 
 
