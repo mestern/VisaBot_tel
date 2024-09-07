@@ -1,6 +1,37 @@
+from _ctypes_test import func
+
 from Func import *
 from Config import *
 import Func
+
+
+user_data = {}
+
+@bot.message_handler(commands=['register'])
+def start_registration(message):
+    chat_id = message.chat.id
+    user_data[chat_id] = {}
+    bot.send_message(chat_id, "Please enter your first name:")
+    hand_reg(message)
+def hand_reg(message):
+    @bot.message_handler()
+    def handle_registration(message):
+        chat_id = message.chat.id
+        if chat_id in user_data:
+            if 'name' not in user_data[chat_id]:
+                user_data[chat_id]['name'] = message.text
+                bot.send_message(chat_id, "Please enter your last name:")
+            elif 'last_name' not in user_data[chat_id]:
+                user_data[chat_id]['last_name'] = message.text
+                bot.send_message(chat_id, "Please enter your age:")
+            elif 'age' not in user_data[chat_id]:
+                try:
+                    age = int(message.text)
+                    user_data[chat_id]['age'] = age
+                    bot.send_message(chat_id, f"Registration successful! Your name is {user_data[chat_id]['name']} {user_data[chat_id]['last_name']} and your age is {age}.")
+                    del user_data[chat_id]
+                except ValueError:
+                    bot.send_message(chat_id, "Invalid age. Please enter a valid number.")
 
 
 # ===============================================================================================
@@ -12,6 +43,29 @@ import Func
 def start_handler(message):
     start(message, message.chat.id)
 
+
+# ===============================================================================================
+
+# handle register
+@bot.message_handler(commands=['redsdsgister'])
+def register_handler(message):
+    print(message.text)
+    @bot.message_handler(func=lambda message: True)
+    def registering(message):
+        print("reg2")
+        if message.text in sellers:
+            resp = add_new_tel_user_bot(message, message.text)
+            bot.send_message(message.chat.id, resp)
+
+        else:
+            bot.send_message(message.chat.id, "seller id not exist")
+
+
+# ===============================================================================================
+# message handler
+# ===============================================================================================
+
+# register function to register a new member
 
 # ===============================================================================================
 # replay keyboard handler

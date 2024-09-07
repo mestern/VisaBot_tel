@@ -21,7 +21,7 @@ def main_menu(types):
 
 def inviter_code(types):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    invite = types.KeyboardButton(text="invite code")
+    invite = types.KeyboardButton(text="/register")
     markup.add(invite)
     return markup
 

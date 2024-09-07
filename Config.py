@@ -4,3 +4,6 @@ admin_password = "123321"
 
 # telegram channel id
 ChannelId = '-1001214282289'
+
+
+sellers = ["mohammad", "sayeri", "an"]
