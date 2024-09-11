@@ -8,7 +8,7 @@ from Func import *
 # ============================================================================================
 
 # custom keyboard main menu
-def main_menu(types):
+def rep_main_menu(types):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     price = types.KeyboardButton(text="💸|استعلام قیمت")
     buy = types.KeyboardButton(text="💳|خرید")
@@ -19,7 +19,7 @@ def main_menu(types):
     return markup
 
 
-def inviter_code(types):
+def rep_register(types):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     invite = types.KeyboardButton(text="/register")
     markup.add(invite)
@@ -59,7 +59,7 @@ def inl_acc_time(types):
 
 # ============================================================================================
 
-# handle monthly accou
+# inline button to show account user limit
 def inl_acc_monthly(types):
     markup = types.InlineKeyboardMarkup()
     u1 = types.InlineKeyboardButton(text="تک کاربر", callback_data="m1u1")
@@ -73,7 +73,9 @@ def inl_acc_monthly(types):
 
 
 # ============================================================================================
-def inl_acc_tree_moths(types):
+
+# inline button three month account
+def inl_acc_three_month(types):
     markup = types.InlineKeyboardMarkup()
     u1 = types.InlineKeyboardButton(text="تک کاربر", callback_data="m3u1")
     u2 = types.InlineKeyboardButton(text="دو کاربر", callback_data="m3u2")
@@ -86,6 +88,8 @@ def inl_acc_tree_moths(types):
 
 
 # ============================================================================================
+
+# inline button test account
 def inl_acc_test(types):
     markup = types.InlineKeyboardMarkup()
     d1 = types.InlineKeyboardButton(text="تست یک روز", callback_data="d1u1")
@@ -100,3 +104,36 @@ def inl_acc_test(types):
 
 # ============================================================================================
 
+# inline button register
+def inl_register(types):
+    markup = types.InlineKeyboardMarkup()
+    markup.add(types.InlineKeyboardButton("register", callback_data="register"))
+    return markup
+
+
+# ============================================================================================
+
+def inl_payment(types):
+    markup = types.InlineKeyboardMarkup()
+    pay = types.InlineKeyboardButton(text="پرداخت", callback_data="m1u1")
+    dis_cod = types.InlineKeyboardButton(text="کدتخفیف 🎁", callback_data="dis_cod")
+    bk = types.InlineKeyboardButton(text="↩قبلی", callback_data="omback")
+    cn = types.InlineKeyboardButton(text="❌انصراف", callback_data="cancel")
+    markup.add(pay)
+    markup.add(dis_cod)
+    markup.add(bk, cn)
+    return markup
+
+
+# ============================================================================================
+
+def inl_main(types):
+    markup = types.InlineKeyboardMarkup()
+    pay = types.InlineKeyboardButton(text="پرداخت", callback_data="m1u1")
+    dis_cod = types.InlineKeyboardButton(text="کدتخفیف 🎁", callback_data="dis_cod")
+    bk = types.InlineKeyboardButton(text="↩قبلی", callback_data="omback")
+    cn = types.InlineKeyboardButton(text="❌انصراف", callback_data="cancel")
+    markup.add(pay)
+    markup.add(dis_cod)
+    markup.add(bk, cn)
+    return markup

@@ -1,10 +1,11 @@
 from telebot import types
 import telebot
+import CusKey
 from Config import *
-from CusKey import *
 import requests
-global_id = None
 
+global_id = None
+ids = ["0"]
 
 # ===============================================================================================
 
@@ -12,12 +13,12 @@ global_id = None
 types = types
 bot = telebot.TeleBot('7366730929:AAE071bwbTaEXsSOcKBi35bkETlhxzpjKQY')
 
-
 # ================================================================================================
 
 # check the status of user on telegram channel
-def user_status(message):
-    user_id = message.chat.id
+def user_status(ChannelId, chat_id):
+    member = bot.get_chat_member(ChannelId, chat_id)
+    return member.status
 
 
 # ================================================================================================
@@ -31,45 +32,49 @@ def is_join(chat_id, bot):
 
 # ================================================================================================
 
-# return the user id
-def chat_id(message):
-    return message.chat.id
-
-
-# ================================================================================================
-
-def start(message, chat_id):
-
+# it's work when user send start command and forced the usr to join to the channel
+def start(message, chat_id, types):
     if is_join(chat_id=chat_id, bot=bot):
-        bot.send_message(chat_id,
-                         f"سلام {message.chat.first_name} \n به ربات visa ping "
-                         "خوش اومدی \n\n اینجا میتونی فقط با چند تا کلیک ی فیلترشکن سریع"
-                         " داشته باشی ! \n", reply_markup=inviter_code(types))
         if not is_registered(chat_id, "123321", "shater3"):
-            register(message, chat_id)
-            print("jh")
-            markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
-            markup.add(types.KeyboardButton("register"))
+            bot.send_message(chat_id,
+                             f"سلام {message.chat.first_name} \n به ربات visa ping "
+                             "خوش اومدی \n\n اینجا میتونی فقط با چند تا کلیک ی فیلترشکن سریع"
+                             " داشته باشی ! \n"
+                             "فقط قبلش ریجستر کن !", reply_markup=CusKey.inl_register(types))
+        else:
+            bot.send_message(chat_id,
+                             f"سلام {message.chat.first_name} \n به ربات visa ping "
+                             "خوش اومدی \n\n اینجا میتونی فقط با چند تا کلیک ی فیلترشکن سریع"
+                             " داشته باشی ! \n", reply_markup=CusKey.rep_main_menu(types))
+
 
     else:
-        inl_not_join(chat_id, types, bot)
+        CusKey.inl_not_join(chat_id, types, bot)
 
 
 # ================================================================================================
 
+# check if user was registered
 def is_registered(chat_id, admin_pass, admin_username):
-    if load_tel_user_bot_with_chat_id(chat_id, admin_pass, admin_username) == "username already taken":
+    ss = api_load_tel_user_chat_id(chat_id, admin_pass, admin_username)
+    print("sssssdddddd")
+    if ss == "chat_id not exist":
+        print(ss)
+        return False
+    else:
+        print(ss, "else")
         return True
-    return False
 
 
 # ================================================================================================
 
-def register(message, chat_id):
-    id = bot.send_message(chat_id, "کد دعوتت رو به این پیام ریپلای کن!")
+# start registering the user
+def register(chat_id):
+    id = bot.send_message(chat_id, "کد دعوتت رو بفرست :")
     global_id = id.id + 1
-    print(global_id)
-    return global_id
+    ids.append(global_id)
+    if len(ids) > 1:
+        del ids[0]
 
 
 # ================================================================================================
@@ -79,7 +84,7 @@ def register(message, chat_id):
 # ================================================================================================
 
 # api to crate new account
-def api_create(message, username, password, day, admin_pass, admin_username):
+def api_create_acc(message, username, password, day, admin_username):
     # Define the API endpoint URL
     url = "https://lib2023.site/vping/admin/load_admin_data.php"
 
@@ -88,7 +93,7 @@ def api_create(message, username, password, day, admin_pass, admin_username):
         "action": "add_new_bagher_user",
         "token_key": "YOUR_TOKEN_KEY",
         "admin_username": str(admin_username),
-        "admin_password": str(admin_pass),
+        "admin_password": "default",
         "supporter": "supporter",
         "description": "description",
         "days": str(day),
@@ -115,7 +120,8 @@ def api_create(message, username, password, day, admin_pass, admin_username):
 
 # ================================================================================================
 
-def add_new_tel_user_bot(message, seller_id):
+# api to add new telegram user to the databasfe
+def api_new_tel_user(message, seller_id):
     # Define the API endpoint URL
     url = "https://lib2023.site/vping/admin/load_admin_data.php"
 
@@ -125,7 +131,7 @@ def add_new_tel_user_bot(message, seller_id):
         "token_key": "request_from_bot",
         "chat_id": message.chat.id,
         "tel_username": message.chat.username,
-        "full_name": message.chat.first_name + message.chat.last_name,
+        "full_name": str(message.chat.first_name) + str(message.chat.last_name),
         "bio": message.chat.bio,
         "seller_id": str(seller_id)
 
@@ -136,11 +142,13 @@ def add_new_tel_user_bot(message, seller_id):
     # Check for response
     return response.text
 
-# ================================================================================================
 
 # ================================================================================================
 
-def load_tel_user_bot_with_chat_id(chat_id, admin_pass="shater3", admin_username="123321"):
+# ================================================================================================
+
+# send the data of a user with chat id
+def api_load_tel_user_chat_id(chat_id, admin_pass="shater3", admin_username="123321"):
     # Define the API endpoint URL
     url = "https://lib2023.site/vping/admin/load_admin_data.php"
 
@@ -156,10 +164,20 @@ def load_tel_user_bot_with_chat_id(chat_id, admin_pass="shater3", admin_username
 
     # Send the POST request
     response = requests.post(url, data=data)
+    return response.text
 
 # ================================================================================================
 
 # ================================================================================================
 
+def api_payment():
+    url = "https://lib2023.site/vping/admin/gateway.php"
 
-
+    data = {
+        "action": "start_request",
+        "username1": "",
+        "amount": "",
+        "payment_type": "",
+        "now1": "",
+        "last_id": "",
+    }
