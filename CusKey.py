@@ -113,11 +113,11 @@ def inl_register(types):
 
 # ============================================================================================
 
-def inl_payment(types):
+def inl_payment(types, back, url):
     markup = types.InlineKeyboardMarkup()
-    pay = types.InlineKeyboardButton(text="پرداخت", callback_data="m1u1")
+    pay = types.InlineKeyboardButton(text="پرداخت", url=url)
     dis_cod = types.InlineKeyboardButton(text="کدتخفیف 🎁", callback_data="dis_cod")
-    bk = types.InlineKeyboardButton(text="↩قبلی", callback_data="omback")
+    bk = types.InlineKeyboardButton(text="↩قبلی", callback_data=back)
     cn = types.InlineKeyboardButton(text="❌انصراف", callback_data="cancel")
     markup.add(pay)
     markup.add(dis_cod)
@@ -129,10 +129,10 @@ def inl_payment(types):
 
 def inl_main(types):
     markup = types.InlineKeyboardMarkup()
-    pay = types.InlineKeyboardButton(text="پرداخت", callback_data="m1u1")
-    dis_cod = types.InlineKeyboardButton(text="کدتخفیف 🎁", callback_data="dis_cod")
+    pay = types.InlineKeyboardButton(text="جزئیات اکانت", callback_data="m1u1")
+    dis_cod = types.InlineKeyboardButton(text="یس", callback_data="dis_cod")
     bk = types.InlineKeyboardButton(text="↩قبلی", callback_data="omback")
-    cn = types.InlineKeyboardButton(text="❌انصراف", callback_data="cancel")
+    cn = types.InlineKeyboardButton(text="❌ انصراف", callback_data="cancel")
     markup.add(pay)
     markup.add(dis_cod)
     markup.add(bk, cn)

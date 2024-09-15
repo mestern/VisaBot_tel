@@ -1,8 +1,11 @@
+import json
+import time
 from telebot import types
 import telebot
 import CusKey
 from Config import *
 import requests
+from flask import redirect
 
 global_id = None
 ids = ["0"]
@@ -148,7 +151,7 @@ def api_new_tel_user(message, seller_id):
 # ================================================================================================
 
 # send the data of a user with chat id
-def api_load_tel_user_chat_id(chat_id, admin_pass="shater3", admin_username="123321"):
+def api_load_tel_user_chat_id(chat_id, admin_pass="123321", admin_username="shater3"):
     # Define the API endpoint URL
     url = "https://lib2023.site/vping/admin/load_admin_data.php"
 
@@ -170,14 +173,27 @@ def api_load_tel_user_chat_id(chat_id, admin_pass="shater3", admin_username="123
 
 # ================================================================================================
 
-def api_payment():
-    url = "https://lib2023.site/vping/admin/gateway.php"
 
+def api_payment(chat_id, amount):
+    url = "https://lib2023.site/vping/admin/gateway.php"
     data = {
         "action": "start_request",
-        "username1": "",
-        "amount": "",
-        "payment_type": "",
-        "now1": "",
+        "username1": "shater3",
+        "amount": str(amount),
+        "payment_type": "payment_type",
+        "now1": str(time.strftime("%Y-%m-%d %H:%M:%S")),
         "last_id": "",
     }
+
+    response = json.loads(requests.post(url, data=data).text)
+    authority = response['data']['authority']
+
+    data2 = {
+        "action": "start_payment",
+        "username1": "shater3",
+        "amount": str(amount),
+        "authority": authority
+    }
+
+    return requests.get(url, data2).url
+

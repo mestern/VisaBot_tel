@@ -1,3 +1,5 @@
+import time
+
 from CusKey import *
 from Func import *
 from Config import *
@@ -59,10 +61,10 @@ def rep_key_hand(message):
                 bot.export_chat_invite_link(message.chat.id, "@ping_support1")
             case "💸|استعلام قیمت":
                 bot.reply_to(message=message, text="✅لیست قیمت\n🗓 یک‌ ماهه:"
-                                                   f"\n🔰تک کاربره 110 هزارتومان"
-                                                   f"\n🔰دو کاربره 160 هزارتومان"
-                                                   f"\n🗓 سه ماهه:\n🔰تک کاربره 240 هزارتومان"
-                                                   f"\n🔰دو کاربره 380 هزارتومان\n. ")
+                                                   f"\n🔰تک کاربره {price["m1u1"]} هزارتومان"
+                                                   f"\n🔰دو کاربره {price["m1u2"]} هزارتومان"
+                                                   f"\n🗓 سه ماهه:\n🔰تک کاربره {price["m3u1"]} هزارتومان"
+                                                   f"\n🔰دو کاربره {price["m3u2"]} هزارتومان\n. ")
     else:
         inl_not_join(message.chat.id, types, bot)
 
@@ -110,9 +112,13 @@ def inl_acc_time_hand(call):
         case '1':
             bot.answer_callback_query(call.id, text="درحال انتقال...")
             bot.edit_message_text(message_id=call.message.id,
-                                  reply_markup=inl_acc_monthly(types),
                                   chat_id=call.message.chat.id,
                                   text="شما قادر به دریافت اکانت تست نیستید")
+            time.sleep(5.0)
+            bot.edit_message_text(message_id=call.message.id,
+                                  chat_id=call.message.chat.id,
+                                  reply_markup=inl_acc_time(types),
+                                  text="یکی رو انتخاب کن:")
 
 
 # ===============================================================================================
@@ -123,15 +129,19 @@ def inl_acc_monthly_hand(call):
     match call.data:
         case 'm1u1':
             bot.edit_message_text(message_id=call.message.id,
-                                  reply_markup=inl_payment(types),
+                                  reply_markup=inl_payment(types, "m1b", api_payment(call.message.chat.id,
+                                                                                     int(price["m1u1"] + "000"))),
                                   chat_id=call.message.chat.id,
                                   text="اکانت یک ماه تک کاربر\n"
-                                       "قیمت : 110 هزارتومان")
+                                       f"قیمت : {price["m1u1"]} هزارتومان")
 
         case 'm1u2':
             bot.edit_message_text(message_id=call.message.id,
-                                  reply_markup=inl_acc_monthly(types),
-                                  chat_id=call.message.chat.id)
+                                  reply_markup=inl_payment(types, "m1b", api_payment(call.message.chat.id,
+                                                                                     int(price["m1u2"] + "000"))),
+                                  chat_id=call.message.chat.id,
+                                  text="اکانت یک ماه دو کاربر\n"
+                                       f"قیمت : {price["m1u2"]} هزارتومان")
 
 
 # ===============================================================================================
@@ -139,19 +149,27 @@ def inl_acc_monthly_hand(call):
 @bot.callback_query_handler(func=lambda call: call.data in ["m3u1", 'm3u2'])
 def inl_acc_three_month_hand(call):
     match call.data:
+
         case 'm3u1':
             bot.edit_message_text(message_id=call.message.id,
-                                  reply_markup=inl_acc_monthly(types),
-                                  chat_id=call.message.chat.id)
+                                  reply_markup=inl_payment(types, "m3b", api_payment(call.message.chat.id,
+                                                                                     int(price["m3u1"] + "000"))),
+                                  chat_id=call.message.chat.id,
+                                  text="اکانت یک ماه تک کاربر\n"
+                                       f"قیمت : {price["m3u1"]} هزارتومان")
+
         case 'm3u2':
             bot.edit_message_text(message_id=call.message.id,
-                                  reply_markup=inl_acc_monthly(types),
-                                  chat_id=call.message.chat.id)
+                                  reply_markup=inl_payment(types, "m3b", api_payment(call.message.chat.id,
+                                                                                     int(price["m3u2"] + "000"))),
+                                  chat_id=call.message.chat.id,
+                                  text="اکانت یک ماه تک کاربر\n"
+                                       f"قیمت : {price["m3u2"]} هزارتومان")
 
 
 # ===============================================================================================
-@bot.callback_query_handler(func=lambda call: call.data in ['tback', 'cancel'])
-def inl_acc_monthly_hand(call):
+@bot.callback_query_handler(func=lambda call: call.data in ['tback', 'cancel', 'm1b', 'm3b', 'pay'])
+def inl_acc_back_hand(call):
     match call.data:
         case 'tback':
             bot.answer_callback_query(call.id, text="درحال برگشت ...")
@@ -161,8 +179,28 @@ def inl_acc_monthly_hand(call):
                                   text="قدم اول\n مدت زمان اکانتت رو انتخاب کن:")
         case 'cancel':
             bot.edit_message_text(message_id=call.message.id,
+                                  reply_markup=inl_acc_time(types),
+                                  chat_id=call.message.chat.id,
+                                  text="یکی رو انتخاب کن")
+
+        case 'm1b':
+            bot.answer_callback_query(call.id, text="درحال برگشت ...")
+            bot.edit_message_text(message_id=call.message.id,
                                   reply_markup=inl_acc_monthly(types),
-                                  chat_id=call.message.chat.id)
+                                  chat_id=call.message.chat.id,
+                                  text="اکانت یک ماهه\n تعداد کاربر رو انتخاب کن:")
+
+        case 'm3b':
+            bot.answer_callback_query(call.id, text="درحال برگشت ...")
+            bot.edit_message_text(message_id=call.message.id,
+                                  reply_markup=inl_acc_three_month(types),
+                                  chat_id=call.message.chat.id,
+                                  text="اکانت سه ماهه\n تعداد کاربر رو انتخاب کن:")
+
+
+
+# ===============================================================================================
+
 
 
 # ===============================================================================================
